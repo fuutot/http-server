@@ -13,6 +13,7 @@ def route(path, method):
 route('/', 'index')
 route('/index', 'index')
 route('/next', 'next')
+route('/xml', 'xml')
 
 # BaseHTTPRequestHandlerを継承して独自のRequestHandlerを作る
 class HelloServerHandler(BaseHTTPRequestHandler):
@@ -55,6 +56,23 @@ class HelloServerHandler(BaseHTTPRequestHandler):
             data = self.headers
         )
         self.wfile.write(html.encode('utf-8'))
+        return
+    
+    def xml(self):
+        xml = '''<?xml version="1.0" encoding="UTF-8"?>
+        <data>
+            <person>
+                <name>Taro</name>
+                <age>24</age>
+            </person>
+            <message>Hi!</message>
+        </data>'''
+        self.send_response(200)
+        # ヘッダー情報の追加
+        self.send_header('Content-Type', \
+                         'application/xml; charset=utf-8')
+        self.end_headers()
+        self.wfile.write(xml.encode('utf-8'))
         return
 
     def error(self):
