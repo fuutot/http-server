@@ -1,4 +1,4 @@
-from urllib.parse import urlparse
+from urllib.parse import urlparse, parse_qs
 from http.server import BaseHTTPRequestHandler, HTTPServer
 
 with open('index.html', mode='r') as f:
@@ -40,11 +40,17 @@ class HelloServerHandler(BaseHTTPRequestHandler):
         return
     
     def next(self):
+        _url = urlparse(self.path)
+        query = parse_qs(_url.query)
+        id = query['id'][0]
+        password = query['pass'][0]
+        msg = f'id={id}, password={password}'
         self.send_response(200)
         self.end_headers()
         html = next.format(
             title = 'Hi again',
-            message = 'This is next page'
+            message = msg,
+            data = query
         )
         self.wfile.write(html.encode('utf-8'))
         return
