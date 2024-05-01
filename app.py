@@ -6,19 +6,29 @@ with open('index.html', mode='r') as f:
 with open('next.html', mode='r') as f:
     next = f.read()
 
+routes = []
+def route(path, method):
+    routes.append((path, method))
+
+route('/', 'index')
+route('/index', 'index')
+route('/next', 'next')
+
 # BaseHTTPRequestHandlerを継承して独自のRequestHandlerを作る
 class HelloServerHandler(BaseHTTPRequestHandler):
 
     # ルーティング
     def do_GET(self):
-        _url = urlparse(self.path)
-        if (_url.path == '/'):
-            self.index()
-        elif (_url.path == '/next'):
-            self.next()
+        global routes
+        _url = urlparse(self.path) # path: アクセスされたパスを保管するプロパティ
+        for r in routes:
+            if (r[0] == _url.path):
+                eval('self.' + r[1] + '()') # evalで評価
+                break
         else:
             self.error()
-
+        return
+    
     def index(self):
         self.send_response(200)
         self.end_headers()
