@@ -30,11 +30,13 @@ class HelloServerHandler(BaseHTTPRequestHandler):
         return
     
     def index(self):
+        _url = urlparse(self.path)
         self.send_response(200)
         self.end_headers()
         html = index.format(
             title = 'Hello from python',
-            message = 'Welcom to python'
+            message = 'Welcom to python',
+            link=f'/next?{_url.query}'
         )
         self.wfile.write(html.encode('utf-8'))
         return
