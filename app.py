@@ -1,4 +1,12 @@
-from http.server import SimpleHTTPRequestHandler, HTTPServer
+from http.server import BaseHTTPRequestHandler, HTTPServer
 
-server = HTTPServer(("", 8000), SimpleHTTPRequestHandler)
+class HelloServerHandler(BaseHTTPRequestHandler):
+
+    def do_GET(self):
+        self.send_response(200)
+        self.end_headers()
+        self.wfile.write(b'Sample web-server')
+        return
+
+server = HTTPServer(("", 8000), HelloServerHandler)
 server.serve_forever()
