@@ -52,7 +52,7 @@ class HelloServerHandler(BaseHTTPRequestHandler):
         html = next.format(
             title = 'Hi again',
             message = msg,
-            data = query
+            data = self.headers
         )
         self.wfile.write(html.encode('utf-8'))
         return
